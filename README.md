@@ -1,6 +1,7 @@
 # DrivingSimulatorNeat
 A 2D top-down driving simulator which learns to traverse a track using NEAT. This is simply the program to run the 
-simulator, not the NEAT library.
+simulator, not the NEAT library. The intention of this program is to give the NEAT library a slightly more complicated
+task to test it.
 
 To run, simply use `go run main.go` in terminal.
 

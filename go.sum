@@ -36,6 +36,8 @@ github.com/jcatterton/GoNeat v0.1.5 h1:GQRNESjgQYjlc9TFAqHFC+FJj4nZVKsp/cgQHerWy
 github.com/jcatterton/GoNeat v0.1.5/go.mod h1:MzwUuCreiprYaCQiDKNUBujFRSvoUGDaBM1c448UkbY=
 github.com/jcatterton/GoNeat v0.1.6-0.20200521165012-f681d1ab7585 h1:Ce4rT3lbiW7ub5bhYDrlPIQxwLW5+cGoiiIOZ9c4PmY=
 github.com/jcatterton/GoNeat v0.1.6-0.20200521165012-f681d1ab7585/go.mod h1:MzwUuCreiprYaCQiDKNUBujFRSvoUGDaBM1c448UkbY=
+github.com/jcatterton/GoNeat v0.2.3 h1:9UjTOgAuhD2rLu9f8Dw3e5ob5HdXRCiVZbqWLf4Xz3c=
+github.com/jcatterton/GoNeat v0.2.3/go.mod h1:MzwUuCreiprYaCQiDKNUBujFRSvoUGDaBM1c448UkbY=
 github.com/jung-kurt/gofpdf v1.0.0/go.mod h1:7Id9E/uU8ce6rXgefFLlgrJj/GYY22cpxn+r32jIOes=
 github.com/llgcode/draw2d v0.0.0-20200110163050-b96d8208fcfc h1:v8qNcPPBCFppcuCW2lm5cTCbCqhq+nwy2JeBSez2M2c=
 github.com/llgcode/draw2d v0.0.0-20200110163050-b96d8208fcfc/go.mod h1:mVa0dA29Db2S4LVqDYLlsePDzRJLDfdhVZiI15uY0FA=
