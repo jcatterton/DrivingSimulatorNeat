@@ -24,7 +24,7 @@ Expected Performance:
 It is anticipated that there will be several generations with little to no progress due to the current settings of the
 NEAT library. Several cars should complete the first right turn after a few (varies) generations. The first left turn
 takes considerably longer. This is to be expected as until this point, cars which favor turning right have survived much
-better than cars which favor turning left. Eventually, some cars will pass this point. On average it takes between 25
-and 60 generations before the first car completes the track. A larger population (set where `InitPop(i, o, g)` is called)
+better than cars which favor turning left. Eventually, some cars will pass this point. On average it takes between 15
+and 35 generations before the first car completes the track. A larger population (set where `InitPop(i, o, g)` is called)
 can improve the amount of generations it takes to complete the track, but will also be much more demanding on your 
 system.
