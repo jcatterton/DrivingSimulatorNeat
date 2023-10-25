@@ -13,8 +13,12 @@ type Wall struct {
 	y2 float64
 }
 
-func (w *Wall) Draw(t pixel.Target, imd imdraw.IMDraw) {
-	imd.Color = colornames.Black
+func (w *Wall) Draw(t pixel.Target, imd imdraw.IMDraw, wall bool) {
+	if wall {
+		imd.Color = colornames.Black
+	} else {
+		imd.Color = colornames.Red
+	}
 	imd.Push(pixel.V(w.x1, w.y1))
 	imd.Push(pixel.V(w.x2, w.y2))
 	imd.Line(2)

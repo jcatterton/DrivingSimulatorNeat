@@ -8,3 +8,5 @@ require (
 	github.com/jcatterton/GoNeat v0.2.3
 	golang.org/x/image v0.0.0-20200430140353-33d19683fad8
 )
+
+replace github.com/jcatterton/GoNeat => ../GoNeat

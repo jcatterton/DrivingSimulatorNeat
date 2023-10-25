@@ -76,14 +76,58 @@ func run() {
 		{x1: 150, y1: 250, x2: 150, y2: 850},
 		{x1: 525, y1: 600, x2: 725, y2: 600},
 	}
-	for i := range walls {
-		walls[i].Draw(win, *imd)
+
+	fitnessGate := []Wall{
+		{x1: 250, x2: 250, y1: 850, y2: 950},
+		{x1: 350, x2: 350, y1: 850, y2: 950},
+		{x1: 450, x2: 450, y1: 850, y2: 950},
+		{x1: 550, x2: 550, y1: 850, y2: 950},
+		{x1: 650, x2: 650, y1: 850, y2: 950},
+		{x1: 750, x2: 750, y1: 850, y2: 950},
+		{x1: 800, x2: 875, y1: 850, y2: 925},
+		{x1: 850, x2: 925, y1: 800, y2: 875},
+		{x1: 850, x2: 950, y1: 750, y2: 750},
+		{x1: 850, x2: 950, y1: 600, y2: 600},
+		{x1: 900, x2: 975, y1: 475, y2: 525},
+		{x1: 975, x2: 1025, y1: 400, y2: 475},
+		{x1: 1100, x2: 1100, y1: 350, y2: 450},
+		{x1: 1250, x2: 1250, y1: 350, y2: 450},
+		{x1: 1300, x2: 1400, y1: 350, y2: 350},
+		{x1: 1300, x2: 1400, y1: 250, y2: 250},
+		{x1: 1250, x2: 1250, y1: 250, y2: 150},
+		{x1: 1150, x2: 1150, y1: 250, y2: 150},
+		{x1: 1050, x2: 1050, y1: 250, y2: 150},
+		{x1: 950, x2: 950, y1: 250, y2: 150},
+		{x1: 800, x2: 800, y1: 250, y2: 150},
+		{x1: 700, x2: 763, y1: 225, y2: 283},
+		{x1: 625, x2: 725, y1: 325, y2: 325},
+		{x1: 625, x2: 725, y1: 450, y2: 450},
+		{x1: 625, x2: 625, y1: 500, y2: 600},
+		{x1: 625, x2: 525, y1: 450, y2: 450},
+		{x1: 525, x2: 625, y1: 325, y2: 325},
+		{x1: 550, x2: 483, y1: 225, y2: 283},
+		{x1: 450, x2: 450, y1: 150, y2: 250},
+		{x1: 350, x2: 350, y1: 150, y2: 250},
+		{x1: 250, x2: 250, y1: 150, y2: 250},
+		{x1: 50, x2: 150, y1: 150, y2: 250},
+		{x1: 50, x2: 150, y1: 950, y2: 850},
+		{x1: 50, x2: 150, y1: 300, y2: 300},
+		{x1: 50, x2: 150, y1: 400, y2: 400},
+		{x1: 50, x2: 150, y1: 500, y2: 500},
+		{x1: 50, x2: 150, y1: 600, y2: 600},
+		{x1: 50, x2: 150, y1: 700, y2: 700},
+		{x1: 50, x2: 150, y1: 800, y2: 800},
+	}
+
+	for i := range fitnessGate {
+		fitnessGate[i].Draw(win, *imd, false)
 	}
 
 	pop := Network.InitPopulation(3, 2, 600)
 
 	linesVisible := false
 	brainVisible := true
+	gatesVisible := false
 
 	cars := make([]Car, len(pop.GetAllGenomes()))
 	for i := range cars {
@@ -110,8 +154,12 @@ func run() {
 			brainVisible = !brainVisible
 		}
 
+		if win.JustPressed(pixelgl.Key3) {
+			gatesVisible = !gatesVisible
+		}
+
 		for i := range walls {
-			walls[i].Draw(win, *imd)
+			walls[i].Draw(win, *imd, true)
 		}
 
 		for x := range pop.GetAllGenomes() {
@@ -136,7 +184,6 @@ func run() {
 				outputs := pop.GetAllGenomes()[x].GetOutputs()
 
 				cars[x].MoveForward()
-				cars[x].score++
 
 				if outputs[0] > 0.5 {
 					cars[x].TurnRight()
@@ -150,17 +197,25 @@ func run() {
 
 				cars[x].Move()
 
-				if checkForCollisions(cars[x], walls) {
+				wallCollision, gateCollision := checkForCollisions(cars[x], walls, fitnessGate)
+				if wallCollision {
 					livingCars--
 					pop.GetAllGenomes()[x].SetFitness(cars[x].score)
 					cars[x].score = 0.0
 					cars[x].dead = true
 				}
 
+				if gateCollision {
+					if !cars[x].inFitnessGate {
+						cars[x].inFitnessGate = true
+						cars[x].score = cars[x].score + 100
+					}
+				} else {
+					cars[x].inFitnessGate = false
+				}
+
 				cars[x].Draw(win, pixel.IM.Moved(pixel.V(cars[x].xPos, cars[x].yPos)).Rotated(pixel.V(cars[x].xPos, cars[x].yPos), cars[x].angle))
 			}
-
-			//log.Println(livingCars)
 		}
 
 		if allCarsDead(cars) {
@@ -169,6 +224,7 @@ func run() {
 			win.SetTitle("Driving Simulator - " +
 				"Generation: " + strconv.Itoa(pop.GetGeneration()) + " - " +
 				"Best Fitness: " + strconv.FormatFloat(pop.GetGrandChampion().GetFitness(), 'f', 0, 64) + " - " +
+				"Stagnation: " + strconv.Itoa(pop.GetSpecies()[0].GetStagnation()) + " - " +
 				"Species: " + strconv.Itoa(len(pop.GetSpecies())))
 
 			for i := range cars {
@@ -203,6 +259,11 @@ func run() {
 				}
 			}
 		}
+		if gatesVisible {
+			for i := range fitnessGate {
+				fitnessGate[i].Draw(win, *imd, false)
+			}
+		}
 
 		imd.Draw(win)
 
@@ -212,17 +273,30 @@ func run() {
 	}
 }
 
-func checkForCollisions(c Car, w []Wall) bool {
+func checkForCollisions(c Car, w []Wall, g []Wall) (bool, bool) {
+	wallCollision := false
+	gateCollision := false
+
 	for i := range w {
 		_, intersect1 := w[i].Line().Intersect(c.Bounds()[0])
 		_, intersect2 := w[i].Line().Intersect(c.Bounds()[1])
 		_, intersect3 := w[i].Line().Intersect(c.Bounds()[2])
 		_, intersect4 := w[i].Line().Intersect(c.Bounds()[3])
 		if intersect1 || intersect2 || intersect3 || intersect4 {
-			return true
+			wallCollision = true
 		}
 	}
-	return false
+
+	for i := range g {
+		_, intersect1 := g[i].Line().Intersect(c.Bounds()[0])
+		_, intersect2 := g[i].Line().Intersect(c.Bounds()[1])
+		_, intersect3 := g[i].Line().Intersect(c.Bounds()[2])
+		_, intersect4 := g[i].Line().Intersect(c.Bounds()[3])
+		if intersect1 || intersect2 || intersect3 || intersect4 {
+			gateCollision = true
+		}
+	}
+	return wallCollision, gateCollision
 }
 
 func allCarsDead(cars []Car) bool {

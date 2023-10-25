@@ -16,6 +16,7 @@ type Car struct {
 	sightVecs      []pixel.Line
 	shortSightVecs []pixel.Line
 	score          float64
+	inFitnessGate  bool
 }
 
 func (c *Car) Draw(t pixel.Target, m pixel.Matrix) {
